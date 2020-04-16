@@ -53,8 +53,10 @@ class ISYLightDevice(ISYDevice, Light):
     # pylint: disable=arguments-differ
     def turn_on(self, brightness=None, **kwargs) -> None:
         """Send the turn on command to the ISY994 light device."""
-        if not self._node.turn_on(val=brightness):
-            _LOGGER.debug("Unable to turn on light")
+        if self._node.turn_on(val=brightness):
+            if brightness is not None:
+                if not self._node.set_on_level(brightness):
+                    _LOGGER.debug("Unable to save brightness")
 
     @property
     def supported_features(self):
